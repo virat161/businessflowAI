@@ -2,6 +2,7 @@ import Navbar from "@/components/common/Navbar";
 import Hero from "@/components/common/Hero";
 import Features from "@/components/common/Features";
 import DashboardPreview from "@/components/common/DashboardPreview";
+import HowItWorks from "@/components/common/HowItWorks";
 
 export default function LandingPage() {
   return (
@@ -10,6 +11,7 @@ export default function LandingPage() {
       <Hero />
       <Features />
       <DashboardPreview />
+      <HowItWorks/>
     </>
   );
 }
