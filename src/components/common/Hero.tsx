@@ -1,3 +1,4 @@
+import {Button} from "@/components/ui/Button";
 export default function Hero() {
   return (
     <section className="py-28 px-6 text-center">
@@ -19,13 +20,13 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 flex justify-center gap-5">
-          <button className="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700">
+          <Button className="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700">
             Get Started Free
-          </button>
+          </Button>
 
-          <button className="border px-8 py-4 rounded-xl">
+          <Button className="border px-8 py-4 rounded-xl">
             Watch Demo
-          </button>
+          </Button>
         </div>
 
       </div>
