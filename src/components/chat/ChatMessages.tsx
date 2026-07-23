@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
 
 type Message = {
@@ -7,11 +8,21 @@ type Message = {
 
 type ChatMessagesProps = {
   messages: Message[];
+  isTyping: boolean;
 };
 
 export default function ChatMessages({
   messages,
+  isTyping,
 }: ChatMessagesProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, isTyping]);
+
   return (
     <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -22,6 +33,15 @@ export default function ChatMessages({
             message={msg.message}
           />
         ))}
+
+        {isTyping && (
+          <MessageBubble
+            sender="ai"
+            message="BusinessFlow AI is typing..."
+          />
+        )}
+
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );

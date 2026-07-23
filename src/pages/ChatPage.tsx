@@ -17,7 +17,10 @@ export default function ChatPage() {
     },
   ]);
 
+  const [isTyping, setIsTyping] = useState(false);
+
   const handleSendMessage = (message: string) => {
+    // User Message
     setMessages((prev) => [
       ...prev,
       {
@@ -25,6 +28,23 @@ export default function ChatPage() {
         message,
       },
     ]);
+
+    // Typing Start
+    setIsTyping(true);
+
+    // Fake AI Reply
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "ai",
+          message:
+            "This is a fake AI response. Later we'll replace this with Gemini AI.",
+        },
+      ]);
+
+      setIsTyping(false);
+    }, 1500);
   };
 
   return (
@@ -34,9 +54,14 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col">
         <ChatHeader />
 
-        <ChatMessages messages={messages} />
+        <ChatMessages
+          messages={messages}
+          isTyping={isTyping}
+        />
 
-        <ChatInput onSendMessage={handleSendMessage} />
+        <ChatInput
+          onSendMessage={handleSendMessage}
+        />
       </div>
     </div>
   );
