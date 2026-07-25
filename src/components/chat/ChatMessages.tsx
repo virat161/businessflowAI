@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
+import TypingIndicator from "./TypingIndicator";
 
 type Message = {
   sender: "user" | "ai";
@@ -34,12 +35,7 @@ export default function ChatMessages({
           />
         ))}
 
-        {isTyping && (
-          <MessageBubble
-            sender="ai"
-            message="BusinessFlow AI is typing..."
-          />
-        )}
+        {isTyping && <TypingIndicator />}
 
         <div ref={messagesEndRef} />
       </div>

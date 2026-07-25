@@ -1,41 +1,67 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { SendHorizontal } from "lucide-react";
 
 type ChatInputProps = {
   onSendMessage: (message: string) => void;
 };
 
-export default function ChatInput({ onSendMessage }: ChatInputProps) {
+export default function ChatInput({
+  onSendMessage,
+}: ChatInputProps) {
   const [input, setInput] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
-    if (input.trim() === "") return;
+    if (!input.trim()) return;
 
     onSendMessage(input);
+
     setInput("");
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setInput(e.target.value);
+
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
   return (
     <div className="border-t border-slate-200 bg-white p-4">
-      <div className="max-w-4xl mx-auto flex items-center gap-3">
-        <input
-          type="text"
-          placeholder="Message BusinessFlow AI..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 px-5 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSend();
-            }
-          }}
-        />
+      <div className="max-w-4xl mx-auto">
 
-        <button
-          onClick={handleSend}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
-        >
-          Send
-        </button>
+        <div className="flex items-end rounded-2xl border border-slate-300 bg-white px-4 py-3 shadow-sm focus-within:ring-2 focus-within:ring-blue-500">
+
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={input}
+            onChange={handleChange}
+            placeholder="Message BusinessFlow AI..."
+            className="flex-1 resize-none overflow-hidden bg-transparent outline-none"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+          />
+
+          <button
+            onClick={handleSend}
+            className="ml-3 rounded-xl bg-blue-600 p-3 text-white transition hover:bg-blue-700"
+          >
+            <SendHorizontal size={18} />
+          </button>
+
+        </div>
+
       </div>
     </div>
   );
