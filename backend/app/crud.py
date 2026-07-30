@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session, joinedload
 
 from app import models, schemas
@@ -96,6 +98,11 @@ def create_message(
     conversation_id: int,
     message: schemas.MessageCreate,
 ):
+    conversation = db.get(models.Conversation, conversation_id)
+
+    if not conversation:
+        return None
+
     db_message = models.Message(
         conversation_id=conversation_id,
         sender=message.sender,
@@ -103,6 +110,7 @@ def create_message(
     )
 
     db.add(db_message)
+    conversation.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(db_message)
 
@@ -126,3 +134,25 @@ def delete_message(
     db.commit()
 
     return db_message
+
+def clear_conversation(
+    db: Session,
+    conversation_id: int,
+):
+    conversation = db.get(
+        models.Conversation,
+        conversation_id,
+    )
+
+    if not conversation:
+        return None
+
+    db.query(models.Message).filter(
+        models.Message.conversation_id == conversation_id
+    ).delete()
+
+    conversation.updated_at = datetime.utcnow()
+
+    db.commit()
+
+    return conversation

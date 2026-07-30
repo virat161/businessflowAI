@@ -1,0 +1,40 @@
+# ==========================
+# Python
+# ==========================
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/businessflow.db
+*.pyc
+*.pyo
+*.pyd
+
+# ==========================
+# Node
+# ==========================
+frontend/node_modules/
+frontend/dist/
+
+# ==========================
+# Environment
+# ==========================
+.env
+.env.*
+!backend/.env.example
+
+# ==========================
+# VS Code
+# ==========================
+.vscode/settings.json
+
+# ==========================
+# OS
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Backup Files
+# ==========================
+*.zip

@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # ==========================
@@ -46,3 +46,12 @@ class ConversationResponse(ConversationBase):
     messages: list[MessageResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=10_000)
+
+
+class ChatResponse(BaseModel):
+    user_message: MessageResponse
+    assistant_message: MessageResponse

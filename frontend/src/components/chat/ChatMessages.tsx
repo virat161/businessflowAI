@@ -8,13 +8,11 @@ import WelcomeScreen from "./WelcomeScreen";
 type ChatMessagesProps = {
   messages: Message[];
   isTyping: boolean;
-  onSuggestionClick: (message: string) => void;
 };
 
 export default function ChatMessages({
   messages,
   isTyping,
-  onSuggestionClick,
 }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -25,11 +23,7 @@ export default function ChatMessages({
   }, [messages, isTyping]);
 
   if (messages.length === 0) {
-    return (
-      <WelcomeScreen
-        onSuggestionClick={onSuggestionClick}
-      />
-    );
+    return <WelcomeScreen />;
   }
 
   return (
