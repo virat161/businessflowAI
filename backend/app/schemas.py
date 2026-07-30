@@ -55,3 +55,16 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     user_message: MessageResponse
     assistant_message: MessageResponse
+# ==========================
+# Email Generator Schemas
+# ==========================
+
+class EmailRequest(BaseModel):
+    purpose: str = Field(min_length=1, max_length=500)
+    recipient: str = Field(min_length=1, max_length=200)
+    tone: str = Field(min_length=1, max_length=100)
+    instructions: str = Field(default="", max_length=5000)
+
+
+class EmailResponse(BaseModel):
+    email: str

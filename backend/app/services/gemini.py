@@ -34,7 +34,7 @@ def generate_reply(history: Sequence[tuple[str, str]]) -> str:
         f"{'User' if sender == 'user' else 'BusinessFlow AI'}: {message}"
         for sender, message in history[-20:]
     )
-    
+
     prompt = (
         "You are BusinessFlow AI, a concise and practical assistant for business work. "
         "Give clear, helpful answers.\n\n"
@@ -43,23 +43,102 @@ def generate_reply(history: Sequence[tuple[str, str]]) -> str:
 
     try:
         client = genai.Client(api_key=api_key)
-        
-        # Sahi Gemini API SDK function call
+
         response = client.models.generate_content(
-            model=getenv("GEMINI_MODEL", "gemini-1.5-flash"),
+            model=getenv("GEMINI_MODEL", "gemini-3.6-flash"),
             contents=prompt,
         )
-        
-        # Sahi response object property
+
         reply = (response.text or "").strip()
-        
+
     except Exception as error:
-        print(f"Gemini API Error: {error}") # Terminal mein error dikhane ke liye
+        print(f"Gemini API Error: {error}")
         raise GeminiGenerationError(
             "Gemini could not generate a reply. Check your API key, model access, and quota.",
         ) from error
 
     if not reply:
-        raise GeminiGenerationError("Gemini returned an empty reply. Please try again.")
+        raise GeminiGenerationError(
+            "Gemini returned an empty reply. Please try again."
+        )
 
     return reply
+
+
+def generate_email(
+    purpose: str,
+    recipient: str,
+    tone: str,
+    instructions: str,
+) -> str:
+    api_key = getenv("GEMINI_API_KEY")
+
+    if not api_key:
+        raise GeminiConfigurationError(
+            "Gemini is not configured. Add GEMINI_API_KEY to backend/.env and restart the API.",
+        )
+
+    try:
+        from google import genai
+    except ImportError as error:
+        raise GeminiConfigurationError(
+            "The Google Gen AI SDK is not installed. Install backend requirements and restart the API.",
+        ) from error
+
+    prompt = f"""
+You are BusinessFlow AI, an expert business communication assistant.
+
+Write a professional email based on the following information.
+
+Purpose:
+{purpose}
+
+Recipient:
+{recipient}
+
+Tone:
+{tone}
+
+Additional Instructions:
+{instructions}
+
+Requirements:
+- Include a suitable subject line.
+- Write a complete email.
+- Keep the tone exactly as requested.
+- Be concise but professional.
+- Return plain text only.
+
+Format:
+
+Subject: ...
+
+Dear ...
+
+...
+
+Best Regards,
+"""
+
+    try:
+        client = genai.Client(api_key=api_key)
+
+        response = client.models.generate_content(
+            model=getenv("GEMINI_MODEL", "gemini-3.6-flash"),
+            contents=prompt,
+        )
+
+        email = (response.text or "").strip()
+
+    except Exception as error:
+        print(f"Gemini API Error: {error}")
+        raise GeminiGenerationError(
+            "Gemini could not generate the email. Check your API key, model access, and quota.",
+        ) from error
+
+    if not email:
+        raise GeminiGenerationError(
+            "Gemini returned an empty email."
+        )
+
+    return email

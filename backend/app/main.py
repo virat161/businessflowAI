@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Database imports (Aapke existing architecture ke hisaab se)
+# Database imports
 from app.database import engine
 from app import models
 
 # Routers imports
-from app.routers import conversations, messages, pdf
+from app.routers import conversations, messages, pdf, email
 
 # Create database tables automatically
 models.Base.metadata.create_all(bind=engine)
@@ -16,21 +16,25 @@ app = FastAPI(
     description="Backend API for BusinessFlow AI platform"
 )
 
-# CORS Configuration - Ye bahut zaroori hai taki aapka Vite frontend (localhost:5176) FastAPI se baat kar sake
+# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Development ke time saare ports allow karne ke liye
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Registering all your routers
+# Register all routers
 app.include_router(conversations.router)
 app.include_router(messages.router)
-app.include_router(pdf.router)  # <-- Naya PDF router yahan connect ho gaya
+app.include_router(pdf.router)
+app.include_router(email.router)
 
 @app.get("/")
 def read_root():
     """Health check endpoint"""
-    return {"status": "Online", "message": "Welcome to BusinessFlow AI API"}
+    return {
+        "status": "Online",
+        "message": "Welcome to BusinessFlow AI API",
+    }

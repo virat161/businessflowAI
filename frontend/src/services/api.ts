@@ -102,5 +102,30 @@ export async function deleteMessage(
 ) {
   await api.delete(`/messages/${messageId}`);
 }
+/* ===========================
+   Email Generator APIs
+=========================== */
+
+export interface EmailRequest {
+  purpose: string;
+  recipient: string;
+  tone: string;
+  instructions: string;
+}
+
+export interface EmailResponse {
+  email: string;
+}
+
+export async function generateEmail(
+  request: EmailRequest
+) {
+  const res = await api.post<EmailResponse>(
+    "/email/generate",
+    request
+  );
+
+  return res.data;
+}
 
 export default api;
