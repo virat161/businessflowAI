@@ -153,8 +153,7 @@ Frontend runs at
 http://localhost:5173
 
 
-## Live Demo
-https://businessflow-ai-sfaj.vercel.app/
+
 ```
 
 ---
@@ -220,6 +219,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 - Secure API Access
 
 ---
+[![Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-blue?style=for-the-badge)](https://businessflow-ai-sfaj.vercel.app/)
 
 # 🛣 Roadmap
 
