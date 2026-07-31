@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-
-import { login, saveAuth } from "@/services/authServices";
+import { login } from "../services/authServices";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -10,13 +8,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
 
-  const handleSubmit = async (
+  const handleLogin = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
@@ -28,17 +23,19 @@ export default function LoginPage() {
       return;
     }
 
-    setLoading(true);
-
     try {
+      setLoading(true);
+
       const result = await login({
         email,
         password,
       });
 
-      saveAuth(result);
+      localStorage.setItem("token", result.access_token);
+      localStorage.setItem("user", JSON.stringify(result.user));
 
       navigate("/dashboard");
+
     } catch (err: any) {
       setError(err.message || "Login failed");
     } finally {
@@ -47,132 +44,93 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-6">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-xl p-8">
 
-      <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-8 shadow-2xl">
-
-        <div className="text-center">
-
+        <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white">
             Welcome Back
           </h1>
 
-          <p className="mt-2 text-slate-400">
+          <p className="text-slate-400 mt-2">
             Sign in to continue to BusinessFlow AI
           </p>
-
         </div>
 
         <form
-          onSubmit={handleSubmit}
-          className="mt-8 space-y-5"
+          onSubmit={handleLogin}
+          className="space-y-5"
         >
 
           {error && (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-400">
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
               {error}
             </div>
           )}
 
           <div>
-
-            <label className="text-sm text-slate-300">
+            <label className="block text-sm text-slate-300 mb-2">
               Email
             </label>
 
-            <div className="mt-2 relative">
-
-              <Mail
-                size={18}
-                className="absolute left-3 top-3 text-slate-500"
-              />
-
-              <input
-                type="email"
-                value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
-                placeholder="john@example.com"
-                className="w-full rounded-lg bg-slate-800 border border-slate-700 py-3 pl-10 pr-4 text-white outline-none focus:border-indigo-500"
-              />
-
-            </div>
-
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
+            />
           </div>
 
           <div>
-
-            <label className="text-sm text-slate-300">
+            <label className="block text-sm text-slate-300 mb-2">
               Password
             </label>
 
-            <div className="mt-2 relative">
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
+            />
+          </div>
 
-              <Lock
-                size={18}
-                className="absolute left-3 top-3 text-slate-500"
-              />
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 text-slate-400">
+              <input type="checkbox" />
+              Remember me
+            </label>
 
-              <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
-                value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
-                placeholder="••••••••"
-                className="w-full rounded-lg bg-slate-800 border border-slate-700 py-3 pl-10 pr-12 text-white outline-none focus:border-indigo-500"
-              />
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
-                className="absolute right-3 top-3 text-slate-500"
-              >
-                {showPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
-              </button>
-
-            </div>
-
+            <button
+              type="button"
+              className="text-blue-400 hover:underline"
+            >
+              Forgot Password?
+            </button>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-indigo-600 hover:bg-indigo-700 transition py-3 text-white font-semibold disabled:opacity-60"
+            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
           >
-            {loading
-              ? "Signing In..."
-              : "Sign In"}
+            {loading ? "Signing In..." : "Login"}
           </button>
 
         </form>
 
-        <div className="mt-6 text-center text-sm text-slate-400">
-
+        <p className="mt-6 text-center text-slate-400">
           Don't have an account?{" "}
-
           <Link
             to="/signup"
-            className="text-indigo-400 hover:text-indigo-300 font-medium"
+            className="text-blue-400 hover:underline"
           >
-            Create Account
+            Sign Up
           </Link>
-
-        </div>
+        </p>
 
       </div>
-
     </div>
   );
 }

@@ -1,18 +1,6 @@
-const API_URL = "http://127.0.0.1:8000";
-
-export interface LoginData {
-  email: string;
-  password: string;
-}
-
-export interface SignupData {
-  full_name: string;
-  email: string;
-  password: string;
-}
+import api from "./api";
 
 export interface AuthResponse {
-  message: string;
   access_token: string;
   token_type: string;
   user: {
@@ -22,58 +10,34 @@ export interface AuthResponse {
   };
 }
 
-// =======================
-// LOGIN
-// =======================
-export async function login(
-  data: LoginData
-): Promise<AuthResponse> {
-  const response = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+export async function signup(data: {
+  full_name: string;
+  email: string;
+  password: string;
+}) {
+  const response = await api.post<AuthResponse>(
+    "/auth/signup",
+    data
+  );
 
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.detail || "Login failed");
-  }
-
-  return result;
+  return response.data;
 }
 
-// =======================
-// SIGNUP
-// =======================
-export async function signup(
-  data: SignupData
-): Promise<AuthResponse> {
-  const response = await fetch(`${API_URL}/auth/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+export async function login(data: {
+  email: string;
+  password: string;
+}) {
+  const response = await api.post<AuthResponse>(
+    "/auth/login",
+    data
+  );
 
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.detail || "Signup failed");
-  }
-
-  return result;
+  return response.data;
 }
 
-// =======================
-// TOKEN HELPERS
-// =======================
-export function saveAuth(data: AuthResponse) {
-  localStorage.setItem("token", data.access_token);
-  localStorage.setItem("user", JSON.stringify(data.user));
+export function saveAuth(auth: AuthResponse) {
+  localStorage.setItem("token", auth.access_token);
+  localStorage.setItem("user", JSON.stringify(auth.user));
 }
 
 export function logout() {
@@ -94,5 +58,5 @@ export function getCurrentUser() {
 }
 
 export function isAuthenticated() {
-  return !!localStorage.getItem("token");
+  return !!getToken();
 }

@@ -5,6 +5,29 @@ from datetime import datetime
 from app.database import Base
 
 
+# =========================
+# User Authentication Model
+# =========================
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    full_name = Column(String, nullable=False)
+
+    email = Column(String, unique=True, index=True, nullable=False)
+
+    password = Column(String, nullable=False)
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+    )
+
+
+# =========================
+# Conversations
+# =========================
 class Conversation(Base):
     __tablename__ = "conversations"
 
@@ -26,6 +49,9 @@ class Conversation(Base):
     )
 
 
+# =========================
+# Messages
+# =========================
 class Message(Base):
     __tablename__ = "messages"
 
@@ -51,6 +77,9 @@ class Message(Base):
     )
 
 
+# =========================
+# Business Memory
+# =========================
 class BusinessMemory(Base):
     __tablename__ = "business_memory"
 
