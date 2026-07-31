@@ -1,54 +1,41 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Database imports
 from app.database import engine
 from app import models
 
-from app.routers import (
-    auth,
-    business,
-    conversations,
-    email,
-    messages,
-    pdf,
-)
+# Routers imports
+from app.routers import conversations, messages, pdf, email,business
 
-# Create database tables
+# Create database tables automatically
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="BusinessFlow AI API",
-    version="1.0.0",
-    description="Backend API for BusinessFlow AI",
+    description="Backend API for BusinessFlow AI platform"
 )
 
-# CORS
+# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change this in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ============================
-# Register Routers
-# ============================
-
-app.include_router(auth.router)
+# Register all routers
 app.include_router(conversations.router)
 app.include_router(messages.router)
 app.include_router(pdf.router)
 app.include_router(email.router)
 app.include_router(business.router)
 
-# ============================
-# Root
-# ============================
-
 @app.get("/")
-def root():
+def read_root():
+    """Health check endpoint"""
     return {
-        "status": "OK",
-        "message": "BusinessFlow AI Backend Running 🚀"
+        "status": "Online",
+        "message": "Welcome to BusinessFlow AI API",
     }

@@ -5,10 +5,9 @@ backend/venv/
 backend/.venv/
 backend/__pycache__/
 backend/**/__pycache__/
-backend/businessflow.db
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.sqlite3
+*.db
 
 # ==========================
 # Node
@@ -26,13 +25,27 @@ frontend/dist/
 # ==========================
 # VS Code
 # ==========================
-.vscode/settings.json
+.vscode/
+!.vscode/extensions.json
 
 # ==========================
 # OS
 # ==========================
 .DS_Store
 Thumbs.db
+
+# ==========================
+# Logs
+# ==========================
+*.log
+
+# ==========================
+# Build / Cache
+# ==========================
+.coverage
+.pytest_cache/
+.mypy_cache/
+.cache/
 
 # ==========================
 # Backup Files
