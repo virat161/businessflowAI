@@ -175,31 +175,36 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ### Landing Page
 
-> *(Add Screenshot Here)*
+> <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/e3fbd585-f2d4-47eb-b282-6c86e77d52b0" />
+
 
 ---
 
 ### Dashboard
 
-> *(Add Screenshot Here)*
+> <img width="1918" height="1075" alt="image" src="https://github.com/user-attachments/assets/abf8678e-bb85-489c-8cdd-733d8675f9ef" />
+
 
 ---
 
 ### AI Chat
 
-> *(Add Screenshot Here)*
+> <img width="1914" height="1079" alt="image" src="https://github.com/user-attachments/assets/f49d226e-ef7e-4110-8504-ff5d8e5dce42" />
+
 
 ---
 
 ### PDF Summarizer
 
-> *(Add Screenshot Here)*
+> <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/c7e7ae0e-f595-464a-8adc-a8211a6dca7b" />
+
 
 ---
 
 ### Email Generator
 
-> *(Add Screenshot Here)*
+> <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/91bbf8cc-c0aa-4a96-9791-18151109278f" />
+
 
 ---
 
