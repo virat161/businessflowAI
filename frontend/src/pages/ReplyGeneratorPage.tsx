@@ -39,6 +39,32 @@ export default function ReplyGeneratorPage() {
     }
   };
 
+  const copyEmail = () => {
+    navigator.clipboard.writeText(generatedEmail);
+  };
+
+  const openInGmail = () => {
+    if (!generatedEmail) return;
+
+    const subjectMatch = generatedEmail.match(/^Subject:\s*(.*)$/im);
+
+    const subject = subjectMatch
+      ? subjectMatch[1].trim()
+      : "Business Email";
+
+    const body = generatedEmail.replace(
+      /^Subject:.*$/im,
+      ""
+    ).trim();
+
+    const gmailUrl =
+      `https://mail.google.com/mail/?view=cm&fs=1` +
+      `&su=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+    window.open(gmailUrl, "_blank");
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 p-10">
       <div className="mx-auto max-w-5xl">
@@ -134,14 +160,23 @@ export default function ReplyGeneratorPage() {
                 Generated Email
               </h2>
 
-              <button
-                onClick={() =>
-                  navigator.clipboard.writeText(generatedEmail)
-                }
-                className="rounded-lg bg-slate-800 px-4 py-2 text-white hover:bg-black"
-              >
-                Copy
-              </button>
+              <div className="flex gap-3">
+
+                <button
+                  onClick={copyEmail}
+                  className="rounded-lg bg-slate-800 px-4 py-2 text-white hover:bg-black"
+                >
+                  📋 Copy
+                </button>
+
+                <button
+                  onClick={openInGmail}
+                  className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                >
+                  📧 Gmail
+                </button>
+
+              </div>
 
             </div>
 

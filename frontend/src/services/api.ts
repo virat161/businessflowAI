@@ -127,5 +127,35 @@ export async function generateEmail(
 
   return res.data;
 }
+/* ===========================
+   Business Memory APIs
+=========================== */
 
+export interface BusinessMemory {
+  company_name: string;
+  industry: string;
+  products: string;
+  target_audience: string;
+  brand_tone: string;
+  website: string;
+  email: string;
+  phone: string;
+  notes: string;
+}
+
+export async function getBusinessMemory() {
+  const res = await api.get<BusinessMemory | null>("/business/");
+  return res.data;
+}
+
+export async function saveBusinessMemory(
+  data: BusinessMemory
+) {
+  const res = await api.post<BusinessMemory>(
+    "/business/",
+    data
+  );
+
+  return res.data;
+}
 export default api;

@@ -1,5 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
+from app import crud
+from app.database import get_db
 from app.schemas import EmailRequest, EmailResponse
 from app.services.gemini import (
     GeminiConfigurationError,
@@ -17,13 +20,19 @@ router = APIRouter(
     "/generate",
     response_model=EmailResponse,
 )
-def generate_business_email(request: EmailRequest):
+def generate_business_email(
+    request: EmailRequest,
+    db: Session = Depends(get_db),
+):
+    business_memory = crud.get_business_memory(db)
+
     try:
         email = generate_email(
             purpose=request.purpose,
             recipient=request.recipient,
             tone=request.tone,
             instructions=request.instructions,
+            business_memory=business_memory,
         )
 
         return EmailResponse(email=email)

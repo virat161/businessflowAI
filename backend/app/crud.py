@@ -110,7 +110,9 @@ def create_message(
     )
 
     db.add(db_message)
+
     conversation.updated_at = datetime.utcnow()
+
     db.commit()
     db.refresh(db_message)
 
@@ -135,6 +137,7 @@ def delete_message(
 
     return db_message
 
+
 def clear_conversation(
     db: Session,
     conversation_id: int,
@@ -156,3 +159,65 @@ def clear_conversation(
     db.commit()
 
     return conversation
+
+
+# ==========================================================
+# Business Memory CRUD
+# ==========================================================
+
+def get_business_memory(db: Session):
+    """
+    Returns the single Business Memory record.
+    """
+
+    return (
+        db.query(models.BusinessMemory)
+        .first()
+    )
+
+
+def save_business_memory(
+    db: Session,
+    memory: schemas.BusinessMemoryCreate,
+):
+    """
+    Creates or updates the Business Memory.
+    Only one Business Memory exists.
+    """
+
+    db_memory = get_business_memory(db)
+
+    if db_memory:
+
+        db_memory.company_name = memory.company_name
+        db_memory.industry = memory.industry
+        db_memory.products = memory.products
+        db_memory.target_audience = memory.target_audience
+        db_memory.brand_tone = memory.brand_tone
+        db_memory.website = memory.website
+        db_memory.email = memory.email
+        db_memory.phone = memory.phone
+        db_memory.notes = memory.notes
+
+        db_memory.updated_at = datetime.utcnow()
+
+    else:
+
+        db_memory = models.BusinessMemory(
+            company_name=memory.company_name,
+            industry=memory.industry,
+            products=memory.products,
+            target_audience=memory.target_audience,
+            brand_tone=memory.brand_tone,
+            website=memory.website,
+            email=memory.email,
+            phone=memory.phone,
+            notes=memory.notes,
+        )
+
+        db.add(db_memory)
+
+    db.commit()
+    db.refresh(db_memory)
+
+    return db_memory

@@ -13,6 +13,8 @@ router = APIRouter(
     prefix="/messages",
     tags=["Messages"],
 )
+
+
 @router.get(
     "/conversation/{conversation_id}",
     response_model=list[schemas.MessageResponse],
@@ -78,16 +80,24 @@ def create_chat_response(
         for message in crud.get_messages(db, conversation_id)
     ]
 
+    # Fetch Business Memory
+    business_memory = crud.get_business_memory(db)
+
     try:
-        assistant_text = generate_reply([
-            *history,
-            ("user", user_text),
-        ])
+        assistant_text = generate_reply(
+            [
+                *history,
+                ("user", user_text),
+            ],
+            business_memory=business_memory,
+        )
+
     except GeminiConfigurationError as error:
         raise HTTPException(
             status_code=503,
             detail=str(error),
         ) from error
+
     except GeminiGenerationError as error:
         raise HTTPException(
             status_code=502,
@@ -97,12 +107,19 @@ def create_chat_response(
     user_message = crud.create_message(
         db,
         conversation_id,
-        schemas.MessageCreate(sender="user", message=user_text),
+        schemas.MessageCreate(
+            sender="user",
+            message=user_text,
+        ),
     )
+
     assistant_message = crud.create_message(
         db,
         conversation_id,
-        schemas.MessageCreate(sender="ai", message=assistant_text),
+        schemas.MessageCreate(
+            sender="ai",
+            message=assistant_text,
+        ),
     )
 
     return schemas.ChatResponse(
@@ -130,6 +147,8 @@ def delete_message(
     return {
         "message": "Message deleted successfully"
     }
+
+
 @router.delete("/conversation/{conversation_id}")
 def clear_conversation(
     conversation_id: int,

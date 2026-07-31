@@ -68,3 +68,31 @@ class EmailRequest(BaseModel):
 
 class EmailResponse(BaseModel):
     email: str
+
+# ==========================
+# Business Memory Schemas
+# ==========================
+
+class BusinessMemoryBase(BaseModel):
+    company_name: str = Field(min_length=1, max_length=200)
+    industry: str = Field(min_length=1, max_length=200)
+    products: str = Field(min_length=1, max_length=5000)
+    target_audience: str = Field(min_length=1, max_length=500)
+    brand_tone: str = Field(min_length=1, max_length=100)
+
+    website: str = ""
+    email: str = ""
+    phone: str = ""
+    notes: str = ""
+
+
+class BusinessMemoryCreate(BusinessMemoryBase):
+    pass
+
+
+class BusinessMemoryResponse(BusinessMemoryBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)

@@ -101,19 +101,7 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* Recent Activity */}
-
-        <div className="bg-white rounded-2xl shadow mt-10 p-6">
-
-          <h3 className="text-2xl font-semibold">
-            Recent Activity
-          </h3>
-
-          <p className="text-gray-500 mt-4">
-            No recent activity yet.
-          </p>
-
-        </div>
+        
 
       </main>
 

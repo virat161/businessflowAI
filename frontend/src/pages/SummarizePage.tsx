@@ -29,6 +29,88 @@ export const PDFSummarizer: React.FC = () => {
             setLoading(false);
         }
     };
+    const copyReport = () => {
+  if (!summaryData) return;
+
+  navigator.clipboard.writeText(
+    JSON.stringify(summaryData, null, 2)
+  );
+};
+
+const downloadReport = () => {
+  if (!summaryData) return;
+
+  const report = `
+# AI Document Analysis Report
+
+Document Type
+${summaryData.document_type}
+
+------------------------------------------------
+
+Executive Summary
+
+${summaryData.summary}
+
+------------------------------------------------
+
+Key Points
+
+${summaryData.key_points.map((p) => `• ${p}`).join("\n")}
+
+------------------------------------------------
+
+Important Dates
+
+${summaryData.important_dates.map((d) => `• ${d}`).join("\n")}
+
+------------------------------------------------
+
+People / Organizations
+
+${summaryData.people_organizations.map((p) => `• ${p}`).join("\n")}
+
+------------------------------------------------
+
+Financial Data
+
+${summaryData.financial_data.map((f) => `• ${f}`).join("\n")}
+
+------------------------------------------------
+
+Action Items
+
+${summaryData.action_items.map((a) => `• ${a}`).join("\n")}
+
+------------------------------------------------
+
+Risks
+
+${summaryData.risks.map((r) => `• ${r}`).join("\n")}
+
+------------------------------------------------
+
+Recommendations
+
+${summaryData.recommendations.map((r) => `• ${r}`).join("\n")}
+`;
+
+  const blob = new Blob([report], {
+    type: "text/markdown",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+
+  link.download = "BusinessFlow_AI_Report.md";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+};
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -81,6 +163,38 @@ export const PDFSummarizer: React.FC = () => {
                 {summaryData && (
                     <div className="bg-white shadow rounded-lg overflow-hidden mt-8 animate-fade-in-up">
                         <div className="px-4 py-5 sm:p-6 space-y-6">
+                            <div className="flex justify-between items-center mb-6">
+
+    <div>
+        <h2 className="text-2xl font-bold">
+            AI Document Analysis
+        </h2>
+
+        <p className="text-gray-500 mt-1">
+            Detected Type:
+            <span className="ml-2 rounded bg-blue-100 px-3 py-1 text-blue-700 font-medium">
+                {summaryData.document_type}
+            </span>
+        </p>
+    </div>
+
+    <div className="flex gap-3">
+        <button
+            onClick={copyReport}
+            className="rounded-lg bg-slate-800 px-4 py-2 text-white"
+        >
+            📋 Copy
+        </button>
+
+        <button
+            onClick={downloadReport}
+            className="rounded-lg bg-green-600 px-4 py-2 text-white"
+        >
+            ⬇ Download
+        </button>
+    </div>
+
+</div>
                             
                             <div>
                                 <h3 className="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-3">Executive Summary</h3>
@@ -95,6 +209,45 @@ export const PDFSummarizer: React.FC = () => {
                                     ))}
                                 </ul>
                             </div>
+                            {summaryData.important_dates.length > 0 && (
+    <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-3">
+            Important Dates
+        </h3>
+
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
+            {summaryData.important_dates.map((date, index) => (
+                <li key={index}>{date}</li>
+            ))}
+        </ul>
+    </div>
+)}
+{summaryData.people_organizations.length > 0 && (
+    <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-3">
+            People / Organizations
+        </h3>
+
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
+            {summaryData.people_organizations.map((person, index) => (
+                <li key={index}>{person}</li>
+            ))}
+        </ul>
+    </div>
+)}
+{summaryData.financial_data.length > 0 && (
+    <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-3">
+            Financial Data
+        </h3>
+
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
+            {summaryData.financial_data.map((item, index) => (
+                <li key={index}>{item}</li>
+            ))}
+        </ul>
+    </div>
+)}
 
                             {summaryData.action_items && summaryData.action_items.length > 0 && (
                                 <div>
@@ -111,6 +264,32 @@ export const PDFSummarizer: React.FC = () => {
                                     </ul>
                                 </div>
                             )}
+                            {summaryData.risks.length > 0 && (
+    <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-3">
+            Risks
+        </h3>
+
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
+            {summaryData.risks.map((risk, index) => (
+                <li key={index}>{risk}</li>
+            ))}
+        </ul>
+    </div>
+)}
+{summaryData.recommendations.length > 0 && (
+    <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-3">
+            Recommendations
+        </h3>
+
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
+            {summaryData.recommendations.map((recommendation, index) => (
+                <li key={index}>{recommendation}</li>
+            ))}
+        </ul>
+    </div>
+)}
 
                         </div>
                     </div>

@@ -49,3 +49,32 @@ class Message(Base):
         "Conversation",
         back_populates="messages",
     )
+
+
+class BusinessMemory(Base):
+    __tablename__ = "business_memory"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    company_name = Column(String, nullable=False)
+    industry = Column(String, nullable=False)
+    products = Column(String, nullable=False)
+    target_audience = Column(String, nullable=False)
+    brand_tone = Column(String, nullable=False)
+
+    website = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+
+    notes = Column(String, nullable=True)
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+    )
+
+    updated_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+    )

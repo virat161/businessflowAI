@@ -6,7 +6,7 @@ from app.database import engine
 from app import models
 
 # Routers imports
-from app.routers import conversations, messages, pdf, email
+from app.routers import conversations, messages, pdf, email,business
 
 # Create database tables automatically
 models.Base.metadata.create_all(bind=engine)
@@ -30,6 +30,7 @@ app.include_router(conversations.router)
 app.include_router(messages.router)
 app.include_router(pdf.router)
 app.include_router(email.router)
+app.include_router(business.router)
 
 @app.get("/")
 def read_root():
